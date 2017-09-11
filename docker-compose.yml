@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  tom:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      mvc-net:
+    tty: true
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./build/libs/:/usr/local/tomcat/webapps
+networks:
+  mvc-net:
