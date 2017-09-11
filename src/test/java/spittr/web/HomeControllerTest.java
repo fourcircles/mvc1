@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasItems;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -32,7 +31,7 @@ public class HomeControllerTest {
 
     @Test
     public void recentSpittles() throws Exception {
-        SpittleRepository repository = Mockito.mock(SpittleRepository.class);
+        SpittleRepository repository = mock(SpittleRepository.class);
         List<Spittle> expectedSpittles = createSpittles(0, 20);
         when(repository.findSpittles(Long.MAX_VALUE, 20))
                 .thenReturn(expectedSpittles);
@@ -49,7 +48,7 @@ public class HomeControllerTest {
 
     @Test
     public void spittlesWithParams() throws Exception {
-        SpittleRepository repository = Mockito.mock(SpittleRepository.class);
+        SpittleRepository repository = mock(SpittleRepository.class);
         List<Spittle> expectedSpittles = createSpittles(4000, 10);
         when(repository.findSpittles(4000, 10))
                 .thenReturn(expectedSpittles);
@@ -70,5 +69,19 @@ public class HomeControllerTest {
             spittles.add(new Spittle("spittle number " + i, new Date()));
         }
         return spittles;
+    }
+
+    @Test
+    public void singleSpittle() throws Exception {
+        SpittleRepository mockRepository = mock(SpittleRepository.class);
+        Spittle spittle55 = new Spittle("spittle55", new Date());
+        when(mockRepository.findSpittle(55l)).thenReturn(spittle55);
+
+        SpittleController spittleController = new SpittleController(mockRepository);
+        MockMvc mockMvc = standaloneSetup(spittleController).build();
+
+        mockMvc.perform(get("/spittles/55"))
+                .andExpect(view().name("spittle"))
+                .andExpect(model().attribute("spittle", spittle55));
     }
 }
