@@ -1,0 +1,55 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven {
+        url 'http://192.168.1.30:8081/artifactory/synergy-libs'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc-portlet', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-websocket', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-beans', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-expression', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-oxm', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-test', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jms', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-messaging', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-instrument', version: '4.3.10.RELEASE'
+    compile group: 'org.springframework', name: 'spring-instrument-tomcat', version: '4.3.10.RELEASE'
+
+//    compile group: 'org.hibernate', name: 'hibernate-core', version: '4.1.4.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-ehcache', version: '4.1.4.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.1.4.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-jpa', version: '4.1.4.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-commons-annotations', version: '4.0.1.Final'
+
+    providedCompile group: 'org.jboss.spec', name: 'jboss-javaee-6.0', version: '3.0.3.Final'
+
+
+    compile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.5'
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+
+    // https://mvnrepository.com/artifact/junit/junit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+
+// https://mvnrepository.com/artifact/com.h2database/h2
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
+
+}
