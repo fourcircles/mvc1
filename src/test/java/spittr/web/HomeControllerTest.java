@@ -3,8 +3,11 @@ package spittr.web;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.view.InternalResourceView;
+import spittr.Spitter;
 import spittr.Spittle;
+import spittr.data.SpitterRepository;
 import spittr.data.SpittleRepository;
 
 import java.util.ArrayList;
@@ -13,7 +16,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -83,5 +88,33 @@ public class HomeControllerTest {
         mockMvc.perform(get("/spittles/55"))
                 .andExpect(view().name("spittle"))
                 .andExpect(model().attribute("spittle", spittle55));
+    }
+
+    @Test
+    public void shouldShowRegistration() throws Exception {
+        SpittrController controller = new SpittrController(null);
+
+        MockMvc mockMvc = standaloneSetup(controller).build();
+        mockMvc.perform(get("/spitter/register"))
+                .andExpect(view().name("registerForm"));
+    }
+
+    @Test
+    public void addSpitter() throws Exception {
+        SpitterRepository repo = mock(SpitterRepository.class);
+        Spitter unsaved = new Spitter("mitch", "jones", "mjones", "3434");
+        Spitter saved = new Spitter(55L, "mitch", "jones", "mjones", "3434");
+        when(repo.save(unsaved)).thenReturn(saved);
+
+        SpittrController controller = new SpittrController(repo);
+
+        MockMvc mockMvc = standaloneSetup(controller).build();
+        mockMvc.perform(post("/spitter/register")
+                .param("firstName", "mitch")
+                .param("lastName", "jones")
+                .param("userName", "mjones")
+                .param("password", "3434"))
+                .andExpect(redirectedUrl("/spitter/mjones"));
+        verify(repo, atLeastOnce()).save(unsaved);
     }
 }
