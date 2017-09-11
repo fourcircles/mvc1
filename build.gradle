@@ -4,9 +4,6 @@ apply plugin: 'war'
 sourceCompatibility = 1.8
 
 repositories {
-    maven {
-        url 'http://192.168.1.30:8081/artifactory/synergy-libs'
-    }
     mavenCentral()
 }
 
