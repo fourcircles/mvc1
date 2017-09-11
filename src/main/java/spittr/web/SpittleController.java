@@ -5,11 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import spittr.data.SpittleRepository;
 
 @Controller
 @RequestMapping("/spittles")
 public class SpittleController {
+
     private SpittleRepository spittleRepository;
 
     @Autowired
@@ -18,8 +20,11 @@ public class SpittleController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String spittles(Model model) {
-        model.addAttribute(spittleRepository.findSpittles(Long.MAX_VALUE, 20));
+    public String spittles(@RequestParam(defaultValue = Long.MAX_VALUE + "") long before,
+                           @RequestParam(defaultValue = "20") int count,
+                           Model model) {
+
+        model.addAttribute(spittleRepository.findSpittles(before, count));
         return "spittles";
     }
 }

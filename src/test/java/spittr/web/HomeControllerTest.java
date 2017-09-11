@@ -1,11 +1,8 @@
 package spittr.web;
 
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
 import org.springframework.web.servlet.view.InternalResourceView;
 import spittr.Spittle;
 import spittr.data.SpittleRepository;
@@ -36,7 +33,7 @@ public class HomeControllerTest {
     @Test
     public void recentSpittles() throws Exception {
         SpittleRepository repository = Mockito.mock(SpittleRepository.class);
-        List<Spittle> expectedSpittles = createSpittles(20);
+        List<Spittle> expectedSpittles = createSpittles(0, 20);
         when(repository.findSpittles(Long.MAX_VALUE, 20))
                 .thenReturn(expectedSpittles);
 
@@ -50,9 +47,26 @@ public class HomeControllerTest {
                 .andExpect(view().name("spittles"));
     }
 
-    private List<Spittle> createSpittles(int count) {
+    @Test
+    public void spittlesWithParams() throws Exception {
+        SpittleRepository repository = Mockito.mock(SpittleRepository.class);
+        List<Spittle> expectedSpittles = createSpittles(4000, 10);
+        when(repository.findSpittles(4000, 10))
+                .thenReturn(expectedSpittles);
+
+        SpittleController spittleController = new SpittleController(repository);
+
+        MockMvc mockMvc = standaloneSetup(spittleController)
+                .setSingleView(new InternalResourceView("/WEB-INF/views/spittles.jsp"))
+                .build();
+        mockMvc.perform(get("/spittles?before=4000&count=10"))
+                .andExpect(model().attribute("spittleList", expectedSpittles))
+                .andExpect(view().name("spittles"));
+    }
+
+    private List<Spittle> createSpittles(int before, int count) {
         List<Spittle> spittles = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = before; i < before + count; i++) {
             spittles.add(new Spittle("spittle number " + i, new Date()));
         }
         return spittles;
